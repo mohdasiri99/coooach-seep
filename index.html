@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض شامل: تطوير المعلمين والتدريس</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Part 1 Colors: Instructional Coaching (Blue) */
+            --p1-dark: #1a5276;
+            --p1-light: #d4e6f1;
+            
+            /* Part 2 Colors: Deliberate Practice (Purple) */
+            --p2-dark: #6c3483;
+            --p2-light: #e8daef;
+
+            /* Part 3 Colors: Adaptive Teaching (Teal/Orange) */
+            --p3-dark: #0e6655;
+            --p3-accent: #e67e22;
+            --p3-light: #d1f2eb;
+
+            --bg-body: #2c3e50;
+            --text-main: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-body);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Slide Container */
+        .slideshow-container {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background-color: #fff;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Slide Base */
+        .slide {
+            display: none;
+            height: 100%;
+            padding: 40px 60px;
+            box-sizing: border-box;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeEffect 0.5s;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Text Styles */
+        h1 { font-size: 3.5rem; margin: 0 0 20px 0; line-height: 1.2; }
+        h2 { font-size: 2.5rem; margin: 0 0 30px 0; border-right: 8px solid; padding-right: 20px; }
+        h3 { font-size: 1.8rem; margin: 0 0 15px 0; font-weight: 700; }
+        p, li { font-size: 1.4rem; line-height: 1.6; color: var(--text-main); font-family: 'Tajawal', sans-serif; }
+        ul { padding-right: 30px; }
+        li { margin-bottom: 15px; }
+
+        /* Section Dividers Styles */
+        .section-divider {
+            text-align: center;
+            color: white;
+            align-items: center;
+        }
+        .section-divider h1 { font-size: 4rem; margin-bottom: 10px; }
+        .section-divider p { color: rgba(255,255,255,0.9); font-size: 1.8rem; }
+        .section-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        /* PART 1 STYLES */
+        .part1 .section-divider { background: linear-gradient(135deg, var(--p1-dark), #2980b9); }
+        .part1 h2 { color: var(--p1-dark); border-color: var(--p1-dark); }
+        .part1 h3 { color: var(--p1-dark); }
+        .part1 .box { background-color: var(--p1-light); border-left: 5px solid var(--p1-dark); padding: 20px; border-radius: 8px; margin-top: 20px; }
+
+        /* PART 2 STYLES */
+        .part2 .section-divider { background: linear-gradient(135deg, var(--p2-dark), #8e44ad); }
+        .part2 h2 { color: var(--p2-dark); border-color: var(--p2-dark); }
+        .part2 h3 { color: var(--p2-dark); }
+        .part2 .box { background-color: var(--p2-light); border-left: 5px solid var(--p2-dark); padding: 20px; border-radius: 8px; margin-top: 20px; }
+
+        /* PART 3 STYLES */
+        .part3 .section-divider { background: linear-gradient(135deg, var(--p3-dark), var(--p3-accent)); }
+        .part3 h2 { color: var(--p3-dark); border-color: var(--p3-accent); }
+        .part3 h3 { color: var(--p3-dark); }
+        .part3 .box { background-color: var(--p3-light); border-left: 5px solid var(--p3-dark); padding: 20px; border-radius: 8px; margin-top: 20px; }
+
+        /* Layouts */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        .card { background: #f8f9fa; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        /* Navigation */
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 16px; margin-top: -22px;
+            color: #ccc; font-weight: bold; font-size: 24px; transition: 0.3s; border-radius: 50%;
+            background-color: rgba(0,0,0,0.05); user-select: none; z-index: 100;
+        }
+        .next { right: 20px; }
+        .prev { left: 20px; transform: rotate(180deg); }
+        .prev:hover, .next:hover { background-color: rgba(0,0,0,0.8); color: white; }
+
+        /* Print Button */
+        .print-btn {
+            position: fixed; top: 20px; left: 20px; background-color: #e74c3c; color: white; border: none;
+            padding: 12px 24px; border-radius: 6px; cursor: pointer; font-family: 'Cairo'; font-weight: bold; z-index: 1000;
+        }
+
+        /* Animation */
+        @keyframes fadeEffect { from {opacity: .4} to {opacity: 1} }
+
+        /* Mobile */
+        @media only screen and (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            h1 { font-size: 2rem; } h2 { font-size: 1.8rem; }
+            .print-btn { display: none; }
+            .slide { padding: 20px; }
+        }
+
+        /* Print Mode */
+        @media print {
+            body { background: white; height: auto; display: block; overflow: visible; }
+            .slideshow-container { width: 100%; max-width: none; box-shadow: none; border-radius: 0; overflow: visible; }
+            .slide { display: flex !important; opacity: 1 !important; page-break-after: always; height: 100vh; border: 1px solid #ddd; }
+            .prev, .next, .print-btn { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ حفظ كـ PDF</button>
+
+<div class="slideshow-container">
+
+    <!-- MAIN TITLE -->
+    <div class="slide section-divider" style="background: linear-gradient(135deg, #2c3e50, #34495e);">
+        <h1>برنامج التطوير المهني المتكامل</h1>
+        <p>دمج الكوتشينج، الممارسة المتعمدة، والتدريس التكيفي</p>
+        <div style="margin-top: 40px; display: flex; gap: 20px; justify-content: center;">
+            <span style="background: var(--p1-dark); padding: 10px 20px; border-radius: 20px; font-size: 1.2rem;">الجزء 1: الكوتشينج المؤسسي</span>
+            <span style="background: var(--p2-dark); padding: 10px 20px; border-radius: 20px; font-size: 1.2rem;">الجزء 2: الممارسة المتعمدة</span>
+            <span style="background: var(--p3-dark); padding: 10px 20px; border-radius: 20px; font-size: 1.2rem;">الجزء 3: التدريس التكيفي</span>
+        </div>
+    </div>
+
+    <!-- ================= PART 1: INSTRUCTIONAL COACHING ================= -->
+    
+    <div class="slide part1 section-divider">
+        <span class="section-tag">الجزء الأول</span>
+        <h1>الكوتشينج التعليمي وتطوير الجميع</h1>
+        <p>Three Pillars Shaping a Trust's Approach</p>
+    </div>
+
+    <div class="slide part1">
+        <h2>لماذا الكوتشينج للجميع؟</h2>
+        <div class="grid-2">
+            <div>
+                <p>تقليدياً، كان يُنظر إلى التوجيه على أنه تدخل علاجي للمعلمين "الضعفاء".</p>
+                <div class="box">
+                    <strong>الرؤية الجديدة:</strong><br>
+                    الكوتشينج هو حق لكل مهني، وهو الوسيلة الأسرع لتطوير الخبرة. الهدف ليس "إصلاح" المعلم، بل "تحسين" الممارسة المهنية للجميع، من المتدرب الجديد إلى المدير الخبير.
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <img src="https://img.icons8.com/color/240/classroom.png" alt="icon" style="opacity: 0.8;">
+            </div>
+        </div>
+    </div>
+
+    <div class="slide part1">
+        <h2>الركائز الثلاث لنجاح الكوتشينج (The Three Pillars)</h2>
+        <p>لضمان نجاح الكوتشينج على مستوى المؤسسة (أو المدرسة)، يجب الاعتماد على ثلاث ركائز:</p>
+        <div class="grid-3">
+            <div class="card">
+                <h3>1. الفهم المشترك</h3>
+                <p>وجود "لغة مشتركة" ونموذج تدريس موحد يفهمه الجميع. لا يمكن تحسين التدريس إذا كنا نختلف على تعريفه.</p>
+            </div>
+            <div class="card">
+                <h3>2. ثقافة التحسين</h3>
+                <p>خلق بيئة آمنة حيث يُعتبر "التدريب" علامة على المهنية وليس الضعف. "حتى الرياضيون الأولمبيون لديهم مدربون".</p>
+            </div>
+            <div class="card">
+                <h3>3. القدرة التشغيلية</h3>
+                <p>توفير الوقت والموارد. جدولة جلسات الكوتشينج ضمن اليوم الدراسي وعدم اعتبارها عبئاً إضافياً.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= PART 2: DELIBERATE PRACTICE ================= -->
+
+    <div class="slide part2 section-divider">
+        <span class="section-tag">الجزء الثاني</span>
+        <h1>الممارسة المتعمدة</h1>
+        <p>What is Deliberate Practice?</p>
+    </div>
+
+    <div class="slide part2">
+        <h2>ما هي الممارسة المتعمدة؟</h2>
+        <div class="grid-2">
+            <div>
+                <p>ليست مجرد تكرار العمل (Repetition)، بل هي تدريب هادف ومركز على مهارة محددة جداً.</p>
+                <div class="box">
+                    <strong>تشبيه الرياضة والموسيقى:</strong><br>
+                    لاعب التنس لا يتدرب فقط بلعب مباريات كاملة، بل يتدرب 100 مرة على "ضربة الإرسال" فقط. الممارسة المتعمدة في التعليم تعني التدرب على "طرح الأسئلة" أو "إدارة الدخول للفصل" بشكل منعزل ومكثف.
+                </div>
+            </div>
+            <div style="text-align: center;">
+                 <h1 style="font-size: 8rem; color: var(--p2-light); margin: 0;">↻</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide part2">
+        <h2>دورة الممارسة المتعمدة</h2>
+        <p>لكي تكون الممارسة فعالة، يجب أن تتبع خطوات محددة:</p>
+        <ul style="font-size: 1.5rem;">
+            <li><strong>العزل (Isolate):</strong> اختيار مهارة صغيرة ودقيقة (مثلاً: الانتظار بعد طرح السؤال).</li>
+            <li><strong>النمذجة (Model):</strong> رؤية خبير يقوم بها بالشكل الصحيح.</li>
+            <li><strong>الممارسة (Practice):</strong> تجربة المهارة خارج ضغط الفصل الدراسي (Rehearsal).</li>
+            <li><strong>التغذية الراجعة (Feedback):</strong> الحصول على تصحيح فوري ودقيق.</li>
+            <li><strong>التكرار (Repeat):</strong> إعادة المحاولة حتى الإتقان (Automaticity).</li>
+        </ul>
+    </div>
+
+    <!-- ================= PART 3: ADAPTIVE TEACHING ================= -->
+
+    <div class="slide part3 section-divider">
+        <span class="section-tag">الجزء الثالث</span>
+        <h1>التدريس التكيفي وجودة التعليم</h1>
+        <p>Quality First Teaching & Adaptive Teaching</p>
+    </div>
+
+    <div class="slide part3">
+        <h2>من التمايز إلى التكيف</h2>
+        <div class="grid-2">
+            <div class="card" style="opacity: 0.7;">
+                <h3>❌ التمايز التقليدي</h3>
+                <p>إعداد 3 مهام مختلفة (سهلة، متوسطة، صعبة). هذا يخلق عبئاً ويخفض سقف التوقعات للطلاب الأضعف.</p>
+            </div>
+            <div class="card" style="border: 2px solid var(--p3-accent);">
+                <h3>✅ التدريس التكيفي</h3>
+                <p>الحفاظ على توقعات عالية <strong>للجميع</strong>، مع تعديل الدعم (Scaffolding) لمساعدة الطلاب على الوصول لنفس الهدف.</p>
+            </div>
+        </div>
+        <div class="box" style="text-align: center; font-size: 1.3rem;">
+            "التدريس عالي الجودة يعني تدريس نفس المحتوى الطموح للجميع، مع توفير السقالات لمن يحتاجها."
+        </div>
+    </div>
+
+    <div class="slide part3">
+        <h2>استراتيجيات التدريس التكيفي</h2>
+        <div class="grid-3">
+            <div class="card">
+                <h3>تجزئة المحتوى (Chunking)</h3>
+                <p>تقسيم المعلومات المعقدة لتقليل الحمل المعرفي، مما يسمح للطلاب بالتركيز على خطوة واحدة في كل مرة.</p>
+            </div>
+            <div class="card">
+                <h3>التحقق من الفهم</h3>
+                <p>استخدام وسائل سريعة (مثل السبورات الصغيرة) لمعرفة استيعاب الفصل بأكمله لحظياً وتعديل الشرح بناءً على ذلك.</p>
+            </div>
+            <div class="card">
+                <h3>السقالات (Scaffolding)</h3>
+                <p>توفير بدايات الجمل، نماذج إجابة، أو بنوك كلمات، ثم إزالتها تدريجياً مع زيادة ثقة الطالب.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCLUSION -->
+    <div class="slide section-divider" style="background: #2c3e50;">
+        <h1>الخلاصة: الرابط بين الأجزاء</h1>
+        <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: right; max-width: 800px;">
+            <p>1. نستخدم <strong>الكوتشينج</strong> لبناء ثقافة تحسين مستمر.</p>
+            <p>2. داخل الكوتشينج، نستخدم <strong>الممارسة المتعمدة</strong> لإتقان المهارات الدقيقة.</p>
+            <p>3. نطبق هذه المهارات في الفصل عبر <strong>التدريس التكيفي</strong> لضمان نجاح كل طالب.</p>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+</div>
+
+<script>
+    let slideIndex = 1;
+    showSlides(slideIndex);
+
+    function plusSlides(n) { showSlides(slideIndex += n); }
+    function currentSlide(n) { showSlides(slideIndex = n); }
+
+    function showSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("slide");
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+            slides[i].className = slides[i].className.replace(" active", "");
+        }
+        slides[slideIndex-1].style.display = "flex";
+        slides[slideIndex-1].className += " active";
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "ArrowLeft") { plusSlides(-1); } 
+        else if (event.key === "ArrowRight") { plusSlides(1); }
+    });
+</script>
+
+</body>
+</html>
